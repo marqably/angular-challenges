@@ -57,5 +57,6 @@ export class CardComponent {
     } else if (this.type === CardType.STUDENT) {
       this.studentStore.addOne(randStudent());
     }
+    console.log('test');
   }
 }
