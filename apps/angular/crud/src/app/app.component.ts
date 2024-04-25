@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { scan } from 'rxjs';
 import { Todo } from './todo.model';
 import { TodoService } from './todo.service';
 
@@ -8,27 +9,47 @@ import { TodoService } from './todo.service';
   imports: [CommonModule],
   selector: 'app-root',
   template: `
-    <div *ngFor="let todo of todos">
+    <div *ngFor="let todo of todos$ | async">
       {{ todo.title }}
       <button (click)="update(todo)">Update</button>
+      <button (click)="delete(todo)">Delete</button>
     </div>
   `,
   styles: [],
 })
-export class AppComponent implements OnInit {
-  todos!: Todo[];
+export class AppComponent {
+  todos$ = this.todoSrv.getAllTodos();
 
   constructor(private todoSrv: TodoService) {}
 
-  ngOnInit(): void {
-    this.todoSrv.getAllTodos().subscribe((todos) => {
-      this.todos = todos;
+  update(updateTodo: Todo) {
+    this.todoSrv.updateTodo(updateTodo).subscribe((newTodo) => {
+      updateTodo.title = newTodo.title;
     });
   }
 
-  update(todo: Todo) {
-    this.todoSrv.updateTodo(todo).subscribe((todoUpdated: Todo) => {
-      this.todos[todoUpdated.id - 1] = todoUpdated;
+  delete(deleteTodo: Todo) {
+    this.todoSrv.deleteTodo(deleteTodo).subscribe(() => {
+      this.todos$ = this.todos$.pipe(
+        scan(
+          (todos: Todo[], _) =>
+            todos.filter((todo) => todo.id !== deleteTodo.id),
+          [],
+        ),
+      );
     });
+    // this.todoSrv.deleteTodo(deleteTodo).subscribe(() => {
+    //   this.todos$ = this.todoSrv.getAllTodos();
+    // });
+
+    // this.todos$ = this.todos$.pipe(
+    //   map((todos) => todos.filter((todo) => todo !== deleteTodo)),
+    //   // tap((todos) => {
+    //   //   console.log(todos);
+    //   // }),
+    //   map((todo) => {
+    //     filter((todo) => todo !== deleteTodo);
+    //   }),
+    // );
   }
 }
