@@ -1,14 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FakeHttpService } from '../../data-access/fake-http.service';
 import { StudentStore } from '../../data-access/student.store';
 import { CardType } from '../../model/card.model';
 import { Student } from '../../model/student.model';
 import { CardComponent } from '../../ui/card/card.component';
+import { ListItemComponent } from '../../ui/list-item/list-item.component';
 
 @Component({
   selector: 'app-student-card',
   template: `
-    <app-card [list]="students" customClass="bg-light-green">
+    <ng-template #cardList>
+      <app-list-item
+        *ngFor="let item of list"
+        [name]="item.firstName"
+        [id]="item.id"
+        [type]="cardType"></app-list-item>
+    </ng-template>
+    <app-card
+      [list]="students"
+      [cardTemplateRef]="cardList"
+      customClass="bg-light-green">
       <img src="assets/img/student.webp" width="200px" />
     </app-card>
   `,
@@ -20,12 +31,13 @@ import { CardComponent } from '../../ui/card/card.component';
       }
     `,
   ],
-  imports: [CardComponent],
+  imports: [CardComponent, ListItemComponent],
 })
 export class StudentCardComponent implements OnInit {
   students: Student[] = [];
   cardType = CardType.STUDENT;
 
+  @ViewChild('cardList', { static: true }) cardList!: TemplateRef<any>;
   constructor(
     private http: FakeHttpService,
     private store: StudentStore,

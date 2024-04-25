@@ -1,10 +1,9 @@
 import { NgFor, NgIf } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, TemplateRef } from '@angular/core';
 import { randStudent, randTeacher } from '../../data-access/fake-http.service';
 import { StudentStore } from '../../data-access/student.store';
 import { TeacherStore } from '../../data-access/teacher.store';
 import { CardType } from '../../model/card.model';
-import { ListItemComponent } from '../list-item/list-item.component';
 
 @Component({
   selector: 'app-card',
@@ -15,11 +14,11 @@ import { ListItemComponent } from '../list-item/list-item.component';
       <ng-content></ng-content>
 
       <section>
-        <app-list-item
-          *ngFor="let item of list"
-          [name]="item.firstName"
-          [id]="item.id"
-          [type]="type"></app-list-item>
+        <ng-container
+          *ngTemplateOutlet="
+            cardTemplateRef;
+            context: { $implicit: students }
+          "></ng-container>
       </section>
 
       <button
@@ -30,12 +29,13 @@ import { ListItemComponent } from '../list-item/list-item.component';
     </div>
   `,
   standalone: true,
-  imports: [NgIf, NgFor, ListItemComponent],
+  imports: [NgIf, NgFor],
 })
 export class CardComponent {
   @Input() list: any[] | null = null;
   @Input() type!: CardType;
   @Input() customClass = '';
+  @Input() cardTemplateRef?: TemplateRef<any>;
 
   CardType = CardType;
 
