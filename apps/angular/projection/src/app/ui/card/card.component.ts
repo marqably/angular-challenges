@@ -1,4 +1,4 @@
-import { CommonModule, NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, TemplateRef } from '@angular/core';
 import { randStudent, randTeacher } from '../../data-access/fake-http.service';
 import { StudentStore } from '../../data-access/student.store';
@@ -29,7 +29,7 @@ import { CardType } from '../../model/card.model';
     </div>
   `,
   standalone: true,
-  imports: [NgIf, NgFor, CommonModule],
+  imports: [CommonModule],
 })
 export class CardComponent implements OnChanges {
   @Input() list: any[] | null = null;

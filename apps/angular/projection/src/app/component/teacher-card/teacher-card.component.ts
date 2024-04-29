@@ -1,4 +1,4 @@
-import { NgFor } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FakeHttpService } from '../../data-access/fake-http.service';
 import { TeacherStore } from '../../data-access/teacher.store';
@@ -6,6 +6,7 @@ import { CardType } from '../../model/card.model';
 import { Teacher } from '../../model/teacher.model';
 import { CardComponent } from '../../ui/card/card.component';
 import { ListItemComponent } from '../../ui/list-item/list-item.component';
+
 @Component({
   selector: 'app-teacher-card',
   template: `
@@ -32,7 +33,7 @@ import { ListItemComponent } from '../../ui/list-item/list-item.component';
     `,
   ],
   standalone: true,
-  imports: [CardComponent, ListItemComponent, NgFor],
+  imports: [CardComponent, ListItemComponent, CommonModule],
 })
 export class TeacherCardComponent implements OnInit {
   teachers: Teacher[] = [];

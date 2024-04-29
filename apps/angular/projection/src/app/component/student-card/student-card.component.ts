@@ -1,4 +1,4 @@
-import { NgFor } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FakeHttpService } from '../../data-access/fake-http.service';
 import { StudentStore } from '../../data-access/student.store';
@@ -32,7 +32,7 @@ import { ListItemComponent } from '../../ui/list-item/list-item.component';
       }
     `,
   ],
-  imports: [CardComponent, ListItemComponent, NgFor],
+  imports: [CardComponent, ListItemComponent, CommonModule],
 })
 export class StudentCardComponent implements OnInit {
   students: Student[] = [];

@@ -1,4 +1,4 @@
-import { NgFor } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { CityStore } from '../../data-access/city.store';
 import { FakeHttpService } from '../../data-access/fake-http.service';
@@ -25,7 +25,7 @@ import { ListItemComponent } from '../../ui/list-item/list-item.component';
     </app-card>
   `,
   standalone: true,
-  imports: [CardComponent, ListItemComponent, NgFor],
+  imports: [CardComponent, ListItemComponent, CommonModule],
 })
 export class CityCardComponent implements OnInit {
   cities: City[] = [];
