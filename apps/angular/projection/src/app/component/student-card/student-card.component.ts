@@ -1,3 +1,4 @@
+import { NgFor } from '@angular/common';
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FakeHttpService } from '../../data-access/fake-http.service';
 import { StudentStore } from '../../data-access/student.store';
@@ -11,7 +12,7 @@ import { ListItemComponent } from '../../ui/list-item/list-item.component';
   template: `
     <ng-template #cardList>
       <app-list-item
-        *ngFor="let item of list"
+        *ngFor="let item of students"
         [name]="item.firstName"
         [id]="item.id"
         [type]="cardType"></app-list-item>
@@ -31,7 +32,7 @@ import { ListItemComponent } from '../../ui/list-item/list-item.component';
       }
     `,
   ],
-  imports: [CardComponent, ListItemComponent],
+  imports: [CardComponent, ListItemComponent, NgFor],
 })
 export class StudentCardComponent implements OnInit {
   students: Student[] = [];

@@ -1,22 +1,37 @@
-import { Component, OnInit } from '@angular/core';
+import { NgFor } from '@angular/common';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { CityStore } from '../../data-access/city.store';
 import { FakeHttpService } from '../../data-access/fake-http.service';
+import { CardType } from '../../model/card.model';
 import { City } from '../../model/city.model';
-
 import { CardComponent } from '../../ui/card/card.component';
+import { ListItemComponent } from '../../ui/list-item/list-item.component';
 
 @Component({
   selector: 'app-city-card',
   template: `
-    <app-card [list]="cities" customClass="bg-light-green">
+    <ng-template #cardList>
+      <app-list-item
+        *ngFor="let item of cities"
+        [name]="item.name"
+        [id]="item.id"
+        [type]="cardType"></app-list-item>
+    </ng-template>
+    <app-card
+      [list]="cities"
+      [cardTemplateRef]="cardList"
+      customClass="bg-light-green">
       <img src="assets/img/city.png" width="200px" />
     </app-card>
   `,
   standalone: true,
-  imports: [CardComponent],
+  imports: [CardComponent, ListItemComponent, NgFor],
 })
 export class CityCardComponent implements OnInit {
   cities: City[] = [];
+  @ViewChild('cardList', { static: true }) cardList!: TemplateRef<any>;
+
+  cardType = CardType.CITY;
 
   constructor(
     private http: FakeHttpService,

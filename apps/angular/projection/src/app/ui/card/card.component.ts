@@ -1,5 +1,5 @@
-import { NgFor, NgIf } from '@angular/common';
-import { Component, Input, TemplateRef } from '@angular/core';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
+import { Component, Input, OnChanges, TemplateRef } from '@angular/core';
 import { randStudent, randTeacher } from '../../data-access/fake-http.service';
 import { StudentStore } from '../../data-access/student.store';
 import { TeacherStore } from '../../data-access/teacher.store';
@@ -17,7 +17,7 @@ import { CardType } from '../../model/card.model';
         <ng-container
           *ngTemplateOutlet="
             cardTemplateRef;
-            context: { $implicit: students }
+            context: { $implicit: list }
           "></ng-container>
       </section>
 
@@ -29,13 +29,13 @@ import { CardType } from '../../model/card.model';
     </div>
   `,
   standalone: true,
-  imports: [NgIf, NgFor],
+  imports: [NgIf, NgFor, CommonModule],
 })
-export class CardComponent {
+export class CardComponent implements OnChanges {
   @Input() list: any[] | null = null;
   @Input() type!: CardType;
   @Input() customClass = '';
-  @Input() cardTemplateRef?: TemplateRef<any>;
+  @Input() cardTemplateRef: TemplateRef<any> | null = null;
 
   CardType = CardType;
 
@@ -43,6 +43,10 @@ export class CardComponent {
     private teacherStore: TeacherStore,
     private studentStore: StudentStore,
   ) {}
+
+  ngOnChanges(): void {
+    console.log('list', this.list);
+  }
 
   addNewItem() {
     if (this.type === CardType.TEACHER) {
