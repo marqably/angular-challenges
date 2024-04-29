@@ -13,7 +13,7 @@ export class TodoService {
       .get<Todo[]>(this.Endpoint)
       .pipe(
         tap((value) => {
-          this.todos$.next(value);
+          this._todos$.next(value);
         }),
       )
       .subscribe();
@@ -25,7 +25,8 @@ export class TodoService {
 
   readonly Endpoint = 'https://jsonplaceholder.typicode.com/todos';
 
-  public todos$ = new BehaviorSubject<Todo[]>([]);
+  private _todos$ = new BehaviorSubject<Todo[]>([]);
+  public todos$ = this._todos$.asObservable();
 
   public getAllTodos() {
     return this.http.get<Todo[]>(this.Endpoint);
@@ -44,8 +45,8 @@ export class TodoService {
         headers: this.httpHeaders,
       })
       .subscribe((newTodo) => {
-        this.todos$.next(
-          this.todos$.value.map((todo) =>
+        this._todos$.next(
+          this._todos$.value.map((todo) =>
             todo.id === newTodo.id ? newTodo : todo,
           ),
         );
@@ -54,8 +55,8 @@ export class TodoService {
 
   public deleteTodo(deleteTodo: Todo) {
     this.http.delete(`${this.Endpoint}/${deleteTodo.id}`).subscribe(() => {
-      this.todos$.next(
-        this.todos$.value.filter((todo) => todo.id !== deleteTodo.id),
+      this._todos$.next(
+        this._todos$.value.filter((todo) => todo.id !== deleteTodo.id),
       );
     });
   }
