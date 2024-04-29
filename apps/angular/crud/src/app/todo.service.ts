@@ -19,18 +19,13 @@ export class TodoService {
       .subscribe();
   }
 
-  httpHeaders: HttpHeaders = new HttpHeaders({
+  private readonly httpHeaders: HttpHeaders = new HttpHeaders({
     'Content-type': 'application/json; charset=UTF-8',
   });
-
-  readonly Endpoint = 'https://jsonplaceholder.typicode.com/todos';
+  private readonly Endpoint = 'https://jsonplaceholder.typicode.com/todos';
 
   private _todos$ = new BehaviorSubject<Todo[]>([]);
   public todos$ = this._todos$.asObservable();
-
-  public getAllTodos() {
-    return this.http.get<Todo[]>(this.Endpoint);
-  }
 
   public updateTodo(todo: Todo) {
     const body = JSON.stringify({
