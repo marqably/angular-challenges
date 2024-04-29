@@ -12,9 +12,8 @@ import { ListItemComponent } from '../../ui/list-item/list-item.component';
   template: `
     <ng-template #cardList let-data="data">
       <app-list-item
-        *ngFor="let item of data"
-        [name]="item.firstName"
-        [id]="item.id"
+        [name]="data.firstName"
+        [id]="data.id"
         [type]="cardType"></app-list-item>
     </ng-template>
     <app-card

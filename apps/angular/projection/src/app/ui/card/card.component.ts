@@ -14,11 +14,13 @@ import { CardType } from '../../model/card.model';
       <ng-content></ng-content>
 
       <section>
-        <ng-container
-          *ngTemplateOutlet="
-            cardTemplateRef;
-            context: { data: list }
-          "></ng-container>
+        <ng-container *ngFor="let data of list">
+          <ng-container
+            *ngTemplateOutlet="
+              cardTemplateRef;
+              context: { data: data }
+            "></ng-container>
+        </ng-container>
       </section>
 
       <button
