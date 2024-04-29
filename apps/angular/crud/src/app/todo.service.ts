@@ -1,21 +1,34 @@
-import { Injectable } from '@angular/core';
-import { Todo } from './todo.model';
-
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { randText } from '@ngneat/falso';
+import { BehaviorSubject, tap } from 'rxjs';
+import { Todo } from './todo.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.http
+      .get<Todo[]>(this.Endpoint)
+      .pipe(
+        tap((value) => {
+          this.todos$.next(value);
+        }),
+      )
+      .subscribe();
+  }
 
   httpHeaders: HttpHeaders = new HttpHeaders({
     'Content-type': 'application/json; charset=UTF-8',
   });
 
+  readonly Endpoint = 'https://jsonplaceholder.typicode.com/todos';
+
+  public todos$ = new BehaviorSubject<Todo[]>([]);
+
   public getAllTodos() {
-    return this.http.get<Todo[]>('https://jsonplaceholder.typicode.com/todos');
+    return this.http.get<Todo[]>(this.Endpoint);
   }
 
   public updateTodo(todo: Todo) {
@@ -26,18 +39,24 @@ export class TodoService {
       userId: todo.userId,
     });
 
-    return this.http.put<Todo>(
-      `https://jsonplaceholder.typicode.com/todos/${todo.id}`,
-      body,
-      {
+    this.http
+      .put<Todo>(`${this.Endpoint}/${todo.id}`, body, {
         headers: this.httpHeaders,
-      },
-    );
+      })
+      .subscribe((newTodo) => {
+        this.todos$.next(
+          this.todos$.value.map((todo) =>
+            todo.id === newTodo.id ? newTodo : todo,
+          ),
+        );
+      });
   }
 
-  public deleteTodo(todo: Todo) {
-    return this.http.delete(
-      `https://jsonplaceholder.typicode.com/todos/${todo.id}`,
-    );
+  public deleteTodo(deleteTodo: Todo) {
+    this.http.delete(`${this.Endpoint}/${deleteTodo.id}`).subscribe(() => {
+      this.todos$.next(
+        this.todos$.value.filter((todo) => todo.id !== deleteTodo.id),
+      );
+    });
   }
 }

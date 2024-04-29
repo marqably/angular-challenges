@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { map } from 'rxjs';
 import { Todo } from './todo.model';
 import { TodoService } from './todo.service';
 
@@ -9,7 +8,7 @@ import { TodoService } from './todo.service';
   imports: [CommonModule],
   selector: 'app-root',
   template: `
-    <div *ngFor="let todo of todos$ | async">
+    <div *ngFor="let todo of this.todoSrv.todos$ | async">
       {{ todo.title }}
       <button (click)="update(todo)">Update</button>
       <button (click)="delete(todo)">Delete</button>
@@ -18,25 +17,13 @@ import { TodoService } from './todo.service';
   styles: [],
 })
 export class AppComponent {
-  todos$ = this.todoSrv.getAllTodos();
-
-  constructor(private todoSrv: TodoService) {}
+  constructor(public todoSrv: TodoService) {}
 
   update(updateTodo: Todo) {
-    this.todoSrv.updateTodo(updateTodo).subscribe((newTodo) => {
-      updateTodo.title = newTodo.title;
-    });
+    this.todoSrv.updateTodo(updateTodo);
   }
 
   delete(deleteTodo: Todo) {
-    this.todoSrv.deleteTodo(deleteTodo).subscribe(() => {
-      this.deleteTodoFromObservable(deleteTodo.id);
-    });
-  }
-
-  deleteTodoFromObservable(id: number) {
-    this.todos$ = this.todos$.pipe(
-      map((todos) => todos.filter((todo) => todo.id !== id)),
-    );
+    this.todoSrv.deleteTodo(deleteTodo);
   }
 }
