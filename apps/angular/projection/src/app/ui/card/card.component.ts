@@ -17,7 +17,7 @@ import { CardType } from '../../model/card.model';
         <ng-container
           *ngTemplateOutlet="
             cardTemplateRef;
-            context: { $implicit: list }
+            context: { data: list }
           "></ng-container>
       </section>
 

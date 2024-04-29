@@ -10,9 +10,9 @@ import { ListItemComponent } from '../../ui/list-item/list-item.component';
 @Component({
   selector: 'app-student-card',
   template: `
-    <ng-template #cardList>
+    <ng-template #cardList let-data="data">
       <app-list-item
-        *ngFor="let item of students"
+        *ngFor="let item of data"
         [name]="item.firstName"
         [id]="item.id"
         [type]="cardType"></app-list-item>
