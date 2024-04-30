@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, TemplateRef } from '@angular/core';
-import { randStudent, randTeacher } from '../../data-access/fake-http.service';
+import { CityStore } from '../../data-access/city.store';
+import {
+  randStudent,
+  randTeacher,
+  randomCity,
+} from '../../data-access/fake-http.service';
 import { StudentStore } from '../../data-access/student.store';
 import { TeacherStore } from '../../data-access/teacher.store';
 import { CardType } from '../../model/card.model';
@@ -34,23 +39,30 @@ import { CardType } from '../../model/card.model';
   imports: [CommonModule],
 })
 export class CardComponent {
-  @Input() list: any[] | null = null;
+  @Input() list!: any[];
   @Input() type!: CardType;
   @Input() customClass = '';
-  @Input() cardTemplateRef: TemplateRef<any> | null = null;
+  @Input() cardTemplateRef!: TemplateRef<any>;
 
   CardType = CardType;
 
   constructor(
     private teacherStore: TeacherStore,
     private studentStore: StudentStore,
+    private cityStore: CityStore,
   ) {}
 
   addNewItem() {
-    if (this.type === CardType.TEACHER) {
-      this.teacherStore.addOne(randTeacher());
-    } else if (this.type === CardType.STUDENT) {
-      this.studentStore.addOne(randStudent());
+    switch (this.type) {
+      case CardType.TEACHER:
+        this.teacherStore.addOne(randTeacher());
+        break;
+      case CardType.STUDENT:
+        this.studentStore.addOne(randStudent());
+        break;
+      case CardType.CITY:
+        this.cityStore.addOne(randomCity());
+        break;
     }
   }
 }

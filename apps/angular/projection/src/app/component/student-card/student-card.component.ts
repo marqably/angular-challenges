@@ -18,6 +18,7 @@ import { ListItemComponent } from '../../ui/list-item/list-item.component';
     </ng-template>
     <app-card
       [list]="students"
+      [type]="cardType"
       [cardTemplateRef]="cardList"
       customClass="bg-light-green">
       <img src="assets/img/student.webp" width="200px" />

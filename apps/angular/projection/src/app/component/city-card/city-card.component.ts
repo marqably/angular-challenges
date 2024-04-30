@@ -18,6 +18,7 @@ import { ListItemComponent } from '../../ui/list-item/list-item.component';
     </ng-template>
     <app-card
       [list]="cities"
+      [type]="cardType"
       [cardTemplateRef]="cardList"
       customClass="bg-light-green">
       <img src="assets/img/city.png" width="200px" />
