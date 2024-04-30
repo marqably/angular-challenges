@@ -9,6 +9,10 @@ import { Todo } from './todo.model';
 })
 export class TodoService {
   constructor(private http: HttpClient) {
+    this.initTodos();
+  }
+
+  private initTodos(): void {
     this.http
       .get<Todo[]>(this.Endpoint)
       .pipe(
@@ -23,11 +27,12 @@ export class TodoService {
     'Content-type': 'application/json; charset=UTF-8',
   });
   private readonly Endpoint = 'https://jsonplaceholder.typicode.com/todos';
-
   private _todos$ = new BehaviorSubject<Todo[]>([]);
+
+  // Everything is void and data only gets exposed via the public todos$ Observable
   public todos$ = this._todos$.asObservable();
 
-  public updateTodo(todo: Todo) {
+  public updateTodo(todo: Todo): void {
     const body = JSON.stringify({
       todo: todo.id,
       title: randText(),
@@ -48,7 +53,7 @@ export class TodoService {
       });
   }
 
-  public deleteTodo(deleteTodo: Todo) {
+  public deleteTodo(deleteTodo: Todo): void {
     this.http.delete(`${this.Endpoint}/${deleteTodo.id}`).subscribe(() => {
       this._todos$.next(
         this._todos$.value.filter((todo) => todo.id !== deleteTodo.id),

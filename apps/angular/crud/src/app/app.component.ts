@@ -19,11 +19,11 @@ import { TodoService } from './todo.service';
 export class AppComponent {
   constructor(public todoSrv: TodoService) {}
 
-  update(updateTodo: Todo) {
+  update(updateTodo: Todo): void {
     this.todoSrv.updateTodo(updateTodo);
   }
 
-  delete(deleteTodo: Todo) {
+  delete(deleteTodo: Todo): void {
     this.todoSrv.deleteTodo(deleteTodo);
   }
 }
