@@ -1,16 +1,16 @@
 import { NgFor } from '@angular/common';
 import { Component } from '@angular/core';
-import { PurePipe } from './pure.pipe';
+import { ConcatWithHyphenPipe } from './concat-with-hyphen.pipe';
 
 @Component({
   standalone: true,
   selector: 'app-root',
   template: `
     <div *ngFor="let person of persons; let index = index">
-      {{ person | pure: index }}
+      {{ person | concatHyphen: index }}
     </div>
   `,
-  imports: [NgFor, PurePipe],
+  imports: [NgFor, ConcatWithHyphenPipe],
 })
 export class AppComponent {
   persons = ['toto', 'jack'];
