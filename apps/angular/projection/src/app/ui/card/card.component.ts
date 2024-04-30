@@ -1,10 +1,17 @@
-import { NgFor, NgIf } from '@angular/common';
-import { Component, Input } from '@angular/core';
-import { randStudent, randTeacher } from '../../data-access/fake-http.service';
+import { CommonModule } from '@angular/common';
+import { Component, Input, NgIterable, TemplateRef } from '@angular/core';
+import { CityStore } from '../../data-access/city.store';
+import {
+  randStudent,
+  randTeacher,
+  randomCity,
+} from '../../data-access/fake-http.service';
 import { StudentStore } from '../../data-access/student.store';
 import { TeacherStore } from '../../data-access/teacher.store';
 import { CardType } from '../../model/card.model';
-import { ListItemComponent } from '../list-item/list-item.component';
+import { City } from '../../model/city.model';
+import { Student } from '../../model/student.model';
+import { Teacher } from '../../model/teacher.model';
 
 @Component({
   selector: 'app-card',
@@ -12,21 +19,16 @@ import { ListItemComponent } from '../list-item/list-item.component';
     <div
       class="flex w-fit flex-col gap-3 rounded-md border-2 border-black p-4"
       [class]="customClass">
-      <img
-        *ngIf="type === CardType.TEACHER"
-        src="assets/img/teacher.png"
-        width="200px" />
-      <img
-        *ngIf="type === CardType.STUDENT"
-        src="assets/img/student.webp"
-        width="200px" />
+      <ng-content></ng-content>
 
       <section>
-        <app-list-item
-          *ngFor="let item of list"
-          [name]="item.firstName"
-          [id]="item.id"
-          [type]="type"></app-list-item>
+        <ng-container *ngFor="let data of list">
+          <ng-container
+            *ngTemplateOutlet="
+              cardTemplateRef;
+              context: { data: data }
+            "></ng-container>
+        </ng-container>
       </section>
 
       <button
@@ -37,25 +39,35 @@ import { ListItemComponent } from '../list-item/list-item.component';
     </div>
   `,
   standalone: true,
-  imports: [NgIf, NgFor, ListItemComponent],
+  imports: [CommonModule],
 })
 export class CardComponent {
-  @Input() list: any[] | null = null;
+  @Input() list!: NgIterable<City | Student | Teacher>;
   @Input() type!: CardType;
   @Input() customClass = '';
+  @Input() cardTemplateRef!: TemplateRef<{
+    data: City | Student | Teacher;
+  }>;
 
   CardType = CardType;
 
   constructor(
     private teacherStore: TeacherStore,
     private studentStore: StudentStore,
+    private cityStore: CityStore,
   ) {}
 
   addNewItem() {
-    if (this.type === CardType.TEACHER) {
-      this.teacherStore.addOne(randTeacher());
-    } else if (this.type === CardType.STUDENT) {
-      this.studentStore.addOne(randStudent());
+    switch (this.type) {
+      case CardType.TEACHER:
+        this.teacherStore.addOne(randTeacher());
+        break;
+      case CardType.STUDENT:
+        this.studentStore.addOne(randStudent());
+        break;
+      case CardType.CITY:
+        this.cityStore.addOne(randomCity());
+        break;
     }
   }
 }
