@@ -4,6 +4,8 @@ import { CityStore } from '../../data-access/city.store';
 import { FakeHttpService } from '../../data-access/fake-http.service';
 import { CardType } from '../../model/card.model';
 import { City } from '../../model/city.model';
+import { Student } from '../../model/student.model';
+import { Teacher } from '../../model/teacher.model';
 import { CardComponent } from '../../ui/card/card.component';
 import { ListItemComponent } from '../../ui/list-item/list-item.component';
 
@@ -29,7 +31,9 @@ import { ListItemComponent } from '../../ui/list-item/list-item.component';
 })
 export class CityCardComponent implements OnInit {
   cities: City[] = [];
-  @ViewChild('cardList', { static: true }) cardList!: TemplateRef<any>;
+  @ViewChild('cardList', { static: true }) cardList!: TemplateRef<{
+    data: City | Student | Teacher;
+  }>;
 
   cardType = CardType.CITY;
 

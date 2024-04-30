@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, TemplateRef } from '@angular/core';
+import { Component, Input, NgIterable, TemplateRef } from '@angular/core';
 import { CityStore } from '../../data-access/city.store';
 import {
   randStudent,
@@ -9,6 +9,9 @@ import {
 import { StudentStore } from '../../data-access/student.store';
 import { TeacherStore } from '../../data-access/teacher.store';
 import { CardType } from '../../model/card.model';
+import { City } from '../../model/city.model';
+import { Student } from '../../model/student.model';
+import { Teacher } from '../../model/teacher.model';
 
 @Component({
   selector: 'app-card',
@@ -39,10 +42,12 @@ import { CardType } from '../../model/card.model';
   imports: [CommonModule],
 })
 export class CardComponent {
-  @Input() list!: any[];
+  @Input() list!: NgIterable<City | Student | Teacher>;
   @Input() type!: CardType;
   @Input() customClass = '';
-  @Input() cardTemplateRef!: TemplateRef<any>;
+  @Input() cardTemplateRef!: TemplateRef<{
+    data: City | Student | Teacher;
+  }>;
 
   CardType = CardType;
 
