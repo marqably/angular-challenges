@@ -14,7 +14,7 @@ export class TodoService {
 
   private initTodos(): void {
     this.http
-      .get<Todo[]>(this.Endpoint)
+      .get<Todo[]>(this.endpoint)
       .pipe(
         tap((value) => {
           this._todos$.next(value);
@@ -26,7 +26,7 @@ export class TodoService {
   private readonly httpHeaders: HttpHeaders = new HttpHeaders({
     'Content-type': 'application/json; charset=UTF-8',
   });
-  private readonly Endpoint = 'https://jsonplaceholder.typicode.com/todos';
+  private readonly endpoint = 'https://jsonplaceholder.typicode.com/todos';
   private _todos$ = new BehaviorSubject<Todo[]>([]);
 
   // Everything is void and data only gets exposed via the public todos$ Observable
@@ -41,7 +41,7 @@ export class TodoService {
     });
 
     this.http
-      .put<Todo>(`${this.Endpoint}/${todo.id}`, body, {
+      .put<Todo>(`${this.endpoint}/${todo.id}`, body, {
         headers: this.httpHeaders,
       })
       .subscribe((newTodo) => {
@@ -54,7 +54,7 @@ export class TodoService {
   }
 
   public deleteTodo(deleteTodo: Todo): void {
-    this.http.delete(`${this.Endpoint}/${deleteTodo.id}`).subscribe(() => {
+    this.http.delete(`${this.endpoint}/${deleteTodo.id}`).subscribe(() => {
       this._todos$.next(
         this._todos$.value.filter((todo) => todo.id !== deleteTodo.id),
       );
