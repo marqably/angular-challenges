@@ -22,13 +22,13 @@ import { Teacher } from '../../model/teacher.model';
       <ng-content></ng-content>
 
       <section>
-        <ng-container *ngFor="let data of list">
+        @for (data of list; track data.id) {
           <ng-container
             *ngTemplateOutlet="
               cardTemplateRef;
               context: { data: data }
             "></ng-container>
-        </ng-container>
+        }
       </section>
 
       <button
